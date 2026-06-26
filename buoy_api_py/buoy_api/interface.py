@@ -62,6 +62,9 @@ from buoy_interfaces.msg import SCRecord  # spring  # noqa
 from buoy_interfaces.msg import TFRecord  # trefoil  # noqa
 from buoy_interfaces.msg import XBRecord  # ahrs  # noqa
 
+# NextWave telemetry
+from buoy_interfaces.msg import WavePredictionOutput # NextWave #noqa
+
 # sim only data
 from buoy_interfaces.msg import LatentData  # noqa
 from buoy_interfaces.srv import IncWaveHeight  # noqa
@@ -109,6 +112,7 @@ class Interface(Node):
         - self.trefoil_callback
         - self.powerbuoy_callback
         - self.latent_callback (sim only)
+        - self.prediction_callback
     """
 
     def __init__(self, node_name, wait_for_services=False, check_for_services=True, **kwargs):
@@ -401,6 +405,9 @@ class Interface(Node):
                          PBRecord, self.powerbuoy_callback])
         sub_info.append(['latent_callback', '/latent_data',
                          LatentData, self.latent_callback])
+        sub_info.append(['prediction_callback', '/the_next_wave',
+                           WavePredictionOutput, self.prediction_callback])
+
         for cb_name, topic, msg_type, cb in sub_info:
             if cb_name in self.__class__.__dict__:  # did derived override a callback?
                 self.get_logger().info("Subscribing to {msg_type} on '{topic}'".format(
@@ -793,6 +800,16 @@ class Interface(Node):
         Override this function to subscribe to /latent_data to receive sim-only LatentData.
 
         :param data: incoming LatentData
+        """
+        pass
+
+    def prediction_callback(self, data):
+        """
+        Override this function to subscribe to /the_next_wave to receive PredictionRecord telemetry.
+
+        PredictionRecord contains a slice of all microcontroller's telemetry data
+
+        :param data: incoming PredictionRecord
         """
         pass
 
