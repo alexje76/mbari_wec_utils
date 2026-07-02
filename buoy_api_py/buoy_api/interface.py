@@ -405,7 +405,7 @@ class Interface(Node):
                          PBRecord, self.powerbuoy_callback])
         sub_info.append(['latent_callback', '/latent_data',
                          LatentData, self.latent_callback])
-        sub_info.append(['prediction_callback', '/the_next_wave',
+        sub_info.append(['prediction_callback', '/wave_predictions',
                            WavePredictionOutput, self.prediction_callback])
 
         for cb_name, topic, msg_type, cb in sub_info:
